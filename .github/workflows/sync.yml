@@ -1,21 +1,30 @@
 name: 同步上游模板更新
 on:
   schedule:
-    - cron: "0 0 * * *"  # 每天凌晨自动同步
-  workflow_dispatch:     # 支持手动点击同步
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+# 解决权限问题（修复 exit code 128）
+permissions:
+  contents: write
+  pull-requests: write
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v4.2.2 # 修复Node.js弃用警告
+      
+      - name: 自动同步上游代码
+        uses: wei/pull@v2.1.0
         with:
-          fetch-depth: 0
-
-      - name: 同步上游代码
-        uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
-        with:
-          upstream_repository: sansan0/TrendRadar
-          upstream_branch: master
-          target_branch: master
-          git_token: ${{ secrets.GITHUB_TOKEN }}
+          # 你的上游项目（固定）
+          upstream: "sansan0/TrendRadar"
+          # 上游分支
+          upstream-branch: "master"
+          # 你的分支
+          branch: "master"
+          # 自动合并
+          merge: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
