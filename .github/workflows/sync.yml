@@ -13,7 +13,7 @@ jobs:
   sync:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4.2.2 # 修复Node.js弃用警告
+      - uses: actions/checkout@v6.0.2 # 修复Node.js弃用警告
       
       - name: 自动同步上游代码
         uses: wei/pull@v2.0.0-alpha.4
